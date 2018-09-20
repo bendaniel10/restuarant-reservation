@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Reservations</string>
+    <string name="has_a_reservation">Has a reservation</string>
+    <string name="no_reservation">No reservation</string>
+    <string name="reserved">Reserved</string>
+    <string name="available">Available</string>
+    <string name="unavailable">Unavailable</string>
+</resources>
