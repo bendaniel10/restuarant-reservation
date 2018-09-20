@@ -2,12 +2,16 @@ package com.bendaniel10.reservations.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.widget.Toast
+import com.bendaniel10.reservations.app.NetworkState
+import com.bendaniel10.reservations.app.ReservationsApplication
 import com.bendaniel10.reservations.database.AppDatabase
 import com.bendaniel10.reservations.database.entity.Customer
 import com.bendaniel10.reservations.database.entity.RestaurantTable
 import com.bendaniel10.reservations.repository.RestaurantTableListRepository
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -29,6 +33,10 @@ class RestaurantTableListViewModel(private val restaurantTableListRepository: Re
 
     val reservationDao = appDatabase.reservationDao()
 
+    val networkStateLiveData = MutableLiveData<NetworkState>().apply { this.postValue(NetworkState.LOADED) }
+
+    val newReservationsLiveData = MutableLiveData<Customer>()
+
     private fun loadRestaurantsToCacheIfEmpty() {
 
         Single.fromCallable<Boolean> {
@@ -45,12 +53,15 @@ class RestaurantTableListViewModel(private val restaurantTableListRepository: Re
 
                             if (cacheEmpty) {
 
+                                networkStateLiveData.postValue(NetworkState.LOADING)
                                 restaurantTableListRepository.loadTableReservationsToCache()
+                                networkStateLiveData.postValue(NetworkState.LOADED)
 
                             }
 
                         },
                         {
+                            networkStateLiveData.postValue(NetworkState.FAILED)
                             Timber.e(it)
                         }
                 )
@@ -64,8 +75,9 @@ class RestaurantTableListViewModel(private val restaurantTableListRepository: Re
             restaurantTableListRepository.reserveTableForCustomer(restaurantTable, currentCustomer)
 
         }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { Timber.e(it) }
-                .subscribe {}
+                .subscribe { newReservationsLiveData.postValue(currentCustomer) }
 
     }
 

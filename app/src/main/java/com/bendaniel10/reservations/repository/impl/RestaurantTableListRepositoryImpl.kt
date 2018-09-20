@@ -21,7 +21,6 @@ class RestaurantTableListRepositoryImpl(private val apiWebService: ApiWebService
     override fun loadTableReservationsToCache() {
 
         apiWebService.fetchTablesJSONFile()
-                .subscribeOn(Schedulers.io())
                 .flatMap {
 
                     Observable.just(it.string())

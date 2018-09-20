@@ -4,11 +4,7 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import com.bendaniel10.reservations.database.AppDatabase
 import com.bendaniel10.reservations.repository.CustomersListRepository
-import junit.framework.Assert
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnit
@@ -65,6 +61,14 @@ class CustomerListViewModelTest {
     fun getCustomersPagedListLiveData() {
 
         Mockito.verify(customersListRepository).getCustomersPagedList()
+
+    }
+
+
+    @Test
+    fun networkStateLiveDataNotNull() {
+
+        Assert.assertNotNull("Must not be null", viewModel.networkStateLiveData)
 
     }
 }

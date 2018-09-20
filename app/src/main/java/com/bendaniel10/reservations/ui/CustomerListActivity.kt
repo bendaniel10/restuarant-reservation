@@ -11,7 +11,9 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.bendaniel10.reservations.R
+import com.bendaniel10.reservations.app.NetworkState
 import com.bendaniel10.reservations.backgroundjob.ClearReservationWorker
 import com.bendaniel10.reservations.databinding.CustomerListActivityBinding
 import com.bendaniel10.reservations.di.module.CustomerListModule
@@ -48,6 +50,8 @@ class CustomerListActivity : DaggerAppCompatActivity() {
         setUpListUpdateObserver()
 
         setUpListItemSelectionObserver()
+
+        setUpProgressBarObserver()
 
         customerPositionUpdatedBroadcastReceiver = buildCustomerPositionUpdatedBroadcastReceiver()
 
@@ -97,6 +101,24 @@ class CustomerListActivity : DaggerAppCompatActivity() {
             }
 
         }
+
+    }
+
+    private fun setUpProgressBarObserver() {
+
+        viewModel.networkStateLiveData.observe(this, Observer {
+
+            val progressBarVisibility = when (it) {
+
+                NetworkState.LOADING -> View.VISIBLE
+                NetworkState.LOADED -> View.GONE
+                NetworkState.FAILED -> View.GONE
+                else -> View.GONE
+            }
+
+            binding.progressBar.visibility = progressBarVisibility
+
+        })
 
     }
 

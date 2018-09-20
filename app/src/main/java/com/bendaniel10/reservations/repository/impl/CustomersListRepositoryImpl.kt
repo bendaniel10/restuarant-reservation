@@ -19,7 +19,6 @@ class CustomersListRepositoryImpl(private val apiWebService: ApiWebService, priv
     override fun loadCustomersToCache() {
 
         apiWebService.fetchCustomersJSONFile()
-                .subscribeOn(Schedulers.io())
                 .flatMap {
 
                     Observable.just(it.string())

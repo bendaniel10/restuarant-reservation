@@ -3,6 +3,7 @@ package com.bendaniel10.reservations.network.service.impl
 import com.bendaniel10.reservations.network.impl.WebServiceBuilderImpl
 import com.bendaniel10.reservations.network.impl.WebServiceFactoryImpl
 import okhttp3.OkHttpClient
+import org.junit.After
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
@@ -41,12 +42,16 @@ class ApiWebServiceImplTest {
 
         val spyWebServiceFactory = Mockito.spy(webServiceFactory)
         val apiWebService = ApiWebServiceImpl(spyWebServiceFactory)
-
         val listUsersSingle = apiWebService.fetchTablesJSONFile()
 
         assertNotNull("Must not return a null object", listUsersSingle)
 
         Mockito.verify(spyWebServiceFactory).buildPublicService()
 
+    }
+
+    @After
+    fun tearDown() {
+        Mockito.validateMockitoUsage()
     }
 }

@@ -11,8 +11,10 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.GridLayoutManager
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.bendaniel10.reservations.R
+import com.bendaniel10.reservations.app.NetworkState
 import com.bendaniel10.reservations.backgroundjob.ClearReservationWorker
 import com.bendaniel10.reservations.database.entity.Customer
 import com.bendaniel10.reservations.databinding.ActivityRestaurantTableListBinding
@@ -77,10 +79,23 @@ class RestaurantTableListActivity : DaggerAppCompatActivity() {
 
         setUpListItemSelectionObserver()
 
+        setUpProgressBarObserver()
+
+        setUpNewReservationNotification()
+
         reservationClearedBroadcastReceiver = buildReservationClearedBroadcastReceiver()
 
         LocalBroadcastManager.getInstance(this).registerReceiver(reservationClearedBroadcastReceiver!!, IntentFilter(ClearReservationWorker.INTENT_ACTION_RESERVATIONS_CLEARED))
 
+    }
+
+    private fun setUpNewReservationNotification() {
+
+        viewModel.newReservationsLiveData.observe(this, Observer {
+
+            Toast.makeText(this, R.string.reservation_successful, Toast.LENGTH_SHORT).show()
+
+        })
     }
 
 
@@ -133,6 +148,24 @@ class RestaurantTableListActivity : DaggerAppCompatActivity() {
 
     }
 
+
+    private fun setUpProgressBarObserver() {
+
+        viewModel.networkStateLiveData.observe(this, Observer {
+
+            val progressBarVisibility = when (it) {
+
+                NetworkState.LOADING -> View.VISIBLE
+                NetworkState.LOADED -> View.GONE
+                NetworkState.FAILED -> View.GONE
+                else -> View.GONE
+            }
+
+            binding.progressBar.visibility = progressBarVisibility
+
+        })
+
+    }
 
     private fun setUpListItemSelectionObserver() {
 

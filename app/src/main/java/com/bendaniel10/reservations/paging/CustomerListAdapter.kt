@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedListAdapter
 import android.databinding.DataBindingUtil
+import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -47,6 +48,8 @@ class CustomerListAdapter(private val selectedCustomer: MutableLiveData<Pair<Int
             holder.binding.customerFullnameTextField.text = """${customer.customerFirstName} ${customer.customerLastName}"""
 
             holder.binding.tableReservationStatusTxt.text = if (customerHasAReservation) context.getString(R.string.has_a_reservation) else context.getString(R.string.no_reservation)
+
+            holder.binding.tableReservationStatusTxt.setTextColor(if (customerHasAReservation) ContextCompat.getColor(context, R.color.green) else ContextCompat.getColor(context, R.color.black))
 
             binding.root.setOnClickListener {
 

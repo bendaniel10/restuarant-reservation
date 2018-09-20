@@ -1,6 +1,7 @@
 package com.bendaniel10.reservations.network.impl
 
 import okhttp3.OkHttpClient
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -35,13 +36,20 @@ class WebServiceFactoryImplTest {
     @Test
     fun buildPublicService() {
 
+        this.webServiceBuilder = Mockito.spy(webServiceBuilder)
+        this.webServiceFactory = WebServiceFactoryImpl(webServiceBuilder)
+
         val spyWebServiceFactory = Mockito.spy(webServiceFactory)
         val anyEndpoint = "https://any.endpoint.com/"
 
         spyWebServiceFactory.buildPublicService(anyEndpoint)
 
-        Mockito.verify(spyWebServiceFactory).webServiceBuilder.withEndpoint(anyEndpoint)
+        Mockito.verify(webServiceBuilder).withEndpoint(anyEndpoint)
 
     }
 
+    @After
+    fun tearDown() {
+        Mockito.validateMockitoUsage()
+    }
 }

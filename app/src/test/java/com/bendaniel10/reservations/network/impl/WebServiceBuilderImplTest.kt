@@ -3,9 +3,11 @@ package com.bendaniel10.reservations.network.impl
 import com.bendaniel10.reservations.network.service.ApiWebService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
 import retrofit2.converter.gson.GsonConverterFactory
 
 class WebServiceBuilderImplTest {
@@ -88,5 +90,9 @@ class WebServiceBuilderImplTest {
 
     }
 
+    @After
+    fun tearDown() {
+        Mockito.validateMockitoUsage()
+    }
 
 }

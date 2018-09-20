@@ -2,6 +2,7 @@ package com.bendaniel10.reservations.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.bendaniel10.reservations.app.NetworkState
 import com.bendaniel10.reservations.database.AppDatabase
 import com.bendaniel10.reservations.database.entity.Customer
 import com.bendaniel10.reservations.repository.CustomersListRepository
@@ -23,6 +24,8 @@ class CustomerListViewModel(private val customersListRepository: CustomersListRe
 
     val customersPagedListLiveData = customersListRepository.getCustomersPagedList()
 
+    val networkStateLiveData = MutableLiveData<NetworkState>().apply { this.postValue(NetworkState.LOADED) }
+
 
     private fun loadCustomersToCacheIfEmpty() {
 
@@ -40,13 +43,19 @@ class CustomerListViewModel(private val customersListRepository: CustomersListRe
 
                             if (customerCacheIsEmpty) {
 
+                                networkStateLiveData.postValue(NetworkState.LOADING)
+
                                 customersListRepository.loadCustomersToCache()
+
+                                networkStateLiveData.postValue(NetworkState.LOADED)
 
                             }
 
                         },
                         {
                             Timber.e(it)
+                            networkStateLiveData.postValue(NetworkState.FAILED)
+
                         }
                 )
 

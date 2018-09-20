@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
-class WebServiceBuilderImpl(private val converterFactory: retrofit2.Converter.Factory, internal var client: OkHttpClient) : WebServiceBuilder {
+open class WebServiceBuilderImpl(private val converterFactory: retrofit2.Converter.Factory, internal var client: OkHttpClient) : WebServiceBuilder {
 
     internal var endPoint: String? = null
     internal var portNumber: String? = null

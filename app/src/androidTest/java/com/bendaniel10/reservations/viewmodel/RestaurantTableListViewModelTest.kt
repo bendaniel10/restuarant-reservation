@@ -71,6 +71,13 @@ class RestaurantTableListViewModelTest {
     }
 
     @Test
+    fun networkStateLiveDataNotNull() {
+
+        Assert.assertNotNull("Must not be null", viewModel.networkStateLiveData)
+
+    }
+
+    @Test
     fun reserveTableForCustomer() {
 
         val restaurantTable = RestaurantTable(true).also {
