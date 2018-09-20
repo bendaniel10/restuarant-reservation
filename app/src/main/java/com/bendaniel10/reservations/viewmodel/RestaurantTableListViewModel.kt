@@ -19,11 +19,6 @@ import timber.log.Timber
 class RestaurantTableListViewModel(private val restaurantTableListRepository: RestaurantTableListRepository,
                                    private val appDatabase: AppDatabase) : ViewModel() {
 
-    init {
-
-        loadRestaurantsToCacheIfEmpty()
-
-    }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -33,9 +28,17 @@ class RestaurantTableListViewModel(private val restaurantTableListRepository: Re
 
     val reservationDao = appDatabase.reservationDao()
 
-    val networkStateLiveData = MutableLiveData<NetworkState>().apply { this.postValue(NetworkState.LOADED) }
+    var networkStateLiveData: MutableLiveData<NetworkState>
 
     val newReservationsLiveData = MutableLiveData<Customer>()
+
+    init {
+
+        this.networkStateLiveData = MutableLiveData<NetworkState>().apply { this.postValue(NetworkState.LOADED) }
+
+        loadRestaurantsToCacheIfEmpty()
+
+    }
 
     private fun loadRestaurantsToCacheIfEmpty() {
 
